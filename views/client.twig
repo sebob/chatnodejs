@@ -1,0 +1,58 @@
+<html>
+<head>
+    <title>Chat {{ title }}</title>
+    <link rel='stylesheet' href="/stylesheets/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.3/jquery-ui.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="/javascripts/chat.js"></script>
+</head>
+<body>
+
+<div class="modal-content users">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title" id="exampleModalLabel">Users Online <span class="chatwith"></span></h4>
+    </div>
+
+    <div id="nickWrap" class="form-group">
+        <p>Enter a username:</p>
+        <p id="nickError"></p>
+        <form id="setNick" class="">
+            <input type="text" id="nickname" class="form-control"></input>
+            <input type="submit" class="btn btn-default"></input>
+        </form>
+    </div>
+
+    <div class="modal-body userlist">
+        <div id="users">
+            <ul class="list-unstyled"></ul>
+        </div>
+    </div>
+</div>
+
+
+<script src="/socket.io/socket.io.js"></script>
+
+<div class="modal-content hide" id="template">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title" id="exampleModalLabel">Chat z <span class="chatwith"></span></h4>
+    </div>
+    <div class="modal-body">
+        <div class="messages">
+        </div>
+        <form id="send-message">
+            <div class="form-group">
+                <label for="message-text" class="control-label">Message:</label>
+                <input class="form-control" type="text" id="message-text">
+                <button type="submit" class="btn btn-default">Wyślij</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

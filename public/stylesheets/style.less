@@ -1,0 +1,78 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+#users {
+  width: 150px;
+  min-height: 150px;
+}
+
+#users ul li {
+  padding:4px;
+  clear: both;
+  display: block;
+}
+
+#users ul li[data-me="true"] {
+  font-weight: bold;
+  color: #008000;
+}
+
+#users ul li:not([data-me="true"]) {
+  cursor: pointer;
+}
+
+.modal-content {
+  width: 400px;
+}
+
+.userlist {
+  display: none;
+}
+
+.hide {
+  display: none;
+}
+
+p.alert strong:after {
+  content: ':';
+  padding:0px 2px 0px 0px;
+}
+
+.modal-body {
+
+}
+.messages {
+  overflow-y: scroll;
+  height:200px;
+}
+
+body.modal-content {
+  overflow: visible;
+}
+
+#draggable {
+  cursor: move;
+  background: #ddd;
+  width: 80px;
+  height: 80px;
+  padding: 0.5em;
+  float: left;
+  margin: 0 10px 10px 0;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.chatwith {
+  font-weight: bold;
+  color: lightcoral;
+}
