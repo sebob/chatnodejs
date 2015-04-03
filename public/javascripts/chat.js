@@ -75,14 +75,15 @@ jQuery(function($){
 
     socket.on('disconnect', function(data) {
         if(!data) {
-
             socket.socket.reconnect();
-            console.log($username);
             if(!users[$username]) {
                 socket.emit('new user', $username, function(data){
                     if(data){
                         $('#nickWrap').hide();
                         $('.userlist').show();
+                        var chat = $('#chat_' + data.user);
+                        $(chat).find('.message_input').prop('disabled', false);
+
                     } else{
                         $nickError.html('That username is already taken!  Try again.');
                     }
@@ -91,7 +92,7 @@ jQuery(function($){
         }
         if(data.user) {
             var chat = $('#chat_' + data.user);
-            chat.find('#message-text').prop('disabled', true);
+            chat.find('.message_input').prop('disabled', true);
         }
     });
 
@@ -111,65 +112,59 @@ jQuery(function($){
             chatID = ('chat_' + data.from);
         }
         var chat = $('#template').clone();
-        var text = $(chat).find('#message-text');
+        var text = $(chat).find('.message_input');
 
         chat.attr({'id' : chatID});
         chat.removeClass('hide');
         chat.find('.chatwith').html(data.to);
-        $(chat).draggable({ scroll: true, cancel: '.modal-body'});
-        $(chat).find('button.close').on('click', function() {
+        $(chat).find('#x_button').on('click', function() {
             $(chat).hide();
         });
-        $('body').append(chat);
+        $('.chats').append(chat);
 
-        $(chat).submit(function(e) {
-            e.preventDefault();
+        $(chat).find('.message_input').keyup(function(e) {
+            if(e.keyCode == 13) {
+                if (data.to && text.val().length > 0) {
+                    var d = new Date();
 
-            if (data.to && text.val().length > 0) {
-                var d = new Date();
-
-                socket.emit('send message', {
-                    msg: text.val(),
-                    from: $username,
-                    to: data.to,
-                    id: chatID,
-                    time: d.yyyymmddhhm()
-                }, function (data) {
-                    $chat.append('<span class="error">' + data + "</span><br/>");
-                });
-
-                var lastMessage = $(chat).find('.messages');
-                var time = $('<small/>').html(d.yyyymmddhhm());
-                lastMessage.append(time);
-                var msg = $('<p />');
-                var login = $('<strong/>').text($username);
-                msg.addClass('alert alert-success').attr('role', 'alert');
-                msg.text(text.val());
-                msg.prepend(login);
-                lastMessage.append(msg);
-                $(lastMessage).scrollTop($(lastMessage)[0].scrollHeight);
-                text.val('');
-            }
+                    socket.emit('send message', {
+                        msg: text.val(),
+                        from: $username,
+                        to: data.to,
+                        id: chatID,
+                        time: d.yyyymmddhhm()
+                    }, function (data) {
+                        $chat.append('<span class="error">' + data + "</span><br/>");
+                    });
+                    data.time = d.yyyymmddhhm();
+                    createMsg(data.time, chat, text.val(), $username);
+                    text.val('');
+                }
+            };
         });
+    }
+
+    var createMsg = function(time, chat, text, from) {
+        var lastMessage = $(chat).find('.messages');
+        var time = $('<small/>').html(time);
+        lastMessage.append(time);
+        var msg = $('<div />').addClass('message');
+        var login = $('<span/>').addClass('label label-info').text(from);
+        msg.text(text);
+        msg.prepend(login);
+        lastMessage.append(msg);
+        $(lastMessage).scrollTop($(lastMessage)[0].scrollHeight);
+        $(chat).find('.message_input').removeAttr('disabled');
     }
 
     var addMessage = function(data) {
 
         if($('#' + data.id).length == 0) {
-            //$('ul').find('[data-username="' + data.from + '"]').trigger('click');
             data.to = data.from;
             data.id = 'chat_' + data.from;
             windowChatUser(data);
         }
-        var time = $('<small/>').html(data.time);
-        var lastMessage = $('#' + data.id).find('.messages');
-        lastMessage.append(time);
-        var login = $('<strong/>').text(data.from);
-        var msg = $('<p />').addClass('alert alert-info').attr('role', 'alert');
-        msg.text(data.msg);
-        msg.prepend(login);
-        lastMessage.append(msg);
-        $(lastMessage).scrollTop($(lastMessage)[0].scrollHeight);
+        createMsg(data.time, $('#' + data.id), data.msg, data.from);
     }
 
 });
